@@ -3,14 +3,14 @@
   "name": "io.github.audryo/audryo",
   "title": "Audryo",
   "description": "Lifecycle email for agents: journeys, campaigns, contacts, consent and delivery health.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "websiteUrl": "https://audryo.com",
   "repository": { "url": "https://github.com/Audryo/Skills", "source": "github" },
   "packages": [
     {
       "registryType": "npm",
       "identifier": "audryo",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": { "type": "stdio" },
       "packageArguments": [{ "type": "positional", "value": "mcp" }],
       "environmentVariables": [
