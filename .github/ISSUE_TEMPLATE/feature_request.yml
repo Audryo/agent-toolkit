@@ -1,0 +1,16 @@
+name: Feature request
+description: A tool, command or skill that would help your agent work with Audryo.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: job
+    attributes:
+      label: What you are trying to do
+      description: The task, not the solution. For example "let the agent pause every journey that sends to an audience".
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: Optional. How it could work.

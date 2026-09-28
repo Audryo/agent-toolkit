@@ -12,25 +12,29 @@
     "skills",
     "LICENSE",
     "README.md",
-    "server.json"
+    "server.json",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "mcp": "node ./bin/audryo.js mcp",
-    "prepublishOnly": "npm test"
+    "changeset": "changeset",
+    "release": "changeset publish",
+    "prepublishOnly": "npm test",
+    "version-packages": "changeset version && node scripts/sync-version.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "license": "MIT",
   "author": "Audryo",
-  "homepage": "https://app.audryo.com/docs/agents/packaging",
+  "homepage": "https://github.com/Audryo/agent-toolkit#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Audryo/Skills.git"
+    "url": "git+https://github.com/Audryo/agent-toolkit.git"
   },
   "bugs": {
-    "url": "https://github.com/Audryo/Skills/issues"
+    "url": "https://github.com/Audryo/agent-toolkit/issues"
   },
   "keywords": [
     "agent-skills",
@@ -46,5 +50,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "mcpName": "io.github.audryo/audryo"
+  "mcpName": "io.github.audryo/audryo",
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3"
+  }
 }
