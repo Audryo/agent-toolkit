@@ -11,7 +11,7 @@ Audryo is a review-before-send lifecycle email API. The Rails `/v1` contract is 
 
 ```bash
 export AUDRYO_API_BASE="http://localhost:3100/v1"
-export AUDRYO_API_KEY="sf_live_..."          # Settings → Agent access
+export AUDRYO_API_KEY="sf_live_..."          # Settings → Developer
 export AUDRYO_PROJECT_ID="<project-uuid>"    # from GET /bootstrap
 ```
 
