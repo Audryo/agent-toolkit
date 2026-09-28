@@ -7,7 +7,8 @@ Releases are automated with [Changesets](https://github.com/changesets/changeset
    **Version Packages** pull request. It bumps the version in
    `package.json`, `.claude-plugin/plugin.json` and `server.json`, and
    writes `CHANGELOG.md`.
-3. Merging that pull request runs the workflow again, which:
+3. Merging that pull request runs the workflow again. When no changesets
+   are left and the version is not on npm yet, it:
    - publishes to npm through Trusted Publishing, with provenance
    - tags `v<version>` and creates the GitHub release
    - updates the entry in the MCP Registry
