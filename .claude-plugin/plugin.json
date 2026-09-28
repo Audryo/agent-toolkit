@@ -1,0 +1,10 @@
+{
+  "name": "audryo",
+  "version": "0.1.0",
+  "description": "Operate Audryo lifecycle email from your agent: MCP tools for journeys, campaigns, contacts and delivery, plus skills for API usage, email authoring and sending best practices.",
+  "author": { "name": "Audryo", "url": "https://audryo.com" },
+  "homepage": "https://app.audryo.com/docs/agents/packaging",
+  "repository": "https://github.com/Audryo/Skills",
+  "license": "MIT",
+  "keywords": ["audryo", "email", "lifecycle", "mcp", "journeys", "campaigns"]
+}

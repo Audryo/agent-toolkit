@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "audryo": {
+      "command": "npx",
+      "args": ["-y", "audryo@latest", "mcp"],
+      "env": {
+        "AUDRYO_API_BASE": "${AUDRYO_API_BASE:-https://api.audryo.com/v1}",
+        "AUDRYO_API_KEY": "${AUDRYO_API_KEY}",
+        "AUDRYO_PROJECT_ID": "${AUDRYO_PROJECT_ID:-}"
+      }
+    }
+  }
+}

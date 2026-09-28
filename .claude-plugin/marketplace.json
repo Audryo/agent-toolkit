@@ -1,0 +1,12 @@
+{
+  "name": "audryo",
+  "owner": { "name": "Audryo", "url": "https://audryo.com" },
+  "plugins": [
+    {
+      "name": "audryo",
+      "source": "./",
+      "description": "Audryo MCP server and skills for lifecycle email.",
+      "category": "marketing"
+    }
+  ]
+}
