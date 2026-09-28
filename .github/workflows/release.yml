@@ -1,7 +1,10 @@
-# Changesets on main open or update a "Version Packages" pull request.
-# Merging it bumps the version and changelog; this workflow then publishes to
-# npm through Trusted Publishing (OIDC, no token, with provenance), creates
-# the GitHub release and updates the MCP Registry.
+# While changesets are pending, keep a "Version Packages" pull request up to
+# date. Once it is merged (no changesets left), publish whatever version is
+# not on npm yet: npm through Trusted Publishing (OIDC, no token, with
+# provenance), a git tag, the GitHub release and the MCP Registry.
+#
+# changesets/action only handles the pull request. Its publish mode writes an
+# .npmrc with NPM_TOKEN, which overrides OIDC and breaks Trusted Publishing.
 name: Release
 
 on:
@@ -32,16 +35,39 @@ jobs:
         uses: changesets/action@v1
         with:
           version: npm run version-packages
-          publish: npm run release
           title: "Version Packages"
           commit: "Version Packages"
-          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"
+
+      - id: check
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        name: Is this version on npm yet?
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if npm view "audryo@$version" version >/dev/null 2>&1; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to npm
+        if: steps.check.outputs.publish == 'true'
+        run: npm publish --provenance --access public
+
+      - name: Tag and create the GitHub release
+        if: steps.check.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          # The changelog section for this version, without its heading.
+          awk -v v="## $VERSION" '$0==v{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md
+          gh release create "v$VERSION" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
 
       - name: Update the MCP Registry
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.check.outputs.publish == 'true'
         run: |
           curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
           ./mcp-publisher login github-oidc
