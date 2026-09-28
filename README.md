@@ -82,7 +82,7 @@ npx audryo delivery health
 ## Development
 
 This repository is a mirror of `packages/audryo` in the Audryo monorepo;
-changes made here are overwritten. Report issues here.
+changes made here are overwritten. Report issues here. Release steps: [RELEASING.md](./RELEASING.md).
 
 ```bash
 npm test
