@@ -20,7 +20,7 @@ export const readConfig = ({ flags = {}, env = process.env } = {}) => {
 export const requireApiKey = (config) => {
   if (config.apiKey) return config;
   throw new ConfigError(
-    "Set AUDRYO_API_KEY or pass --api-key. Create a workspace token at Settings → Agent access.",
+    "Set AUDRYO_API_KEY or pass --api-key. Create a workspace token at Settings → Developer.",
   );
 };
 
