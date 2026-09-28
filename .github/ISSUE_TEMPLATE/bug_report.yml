@@ -1,0 +1,33 @@
+name: Bug report
+description: Something in the CLI, MCP server or a skill does not work as documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran or asked the agent, and what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `npx audryo --version` or the version in your MCP config.
+    validations:
+      required: true
+  - type: dropdown
+    id: client
+    attributes:
+      label: Where you use it
+      multiple: true
+      options: [CLI, Claude Code, Codex, Cursor, Other MCP client]
+  - type: markdown
+    attributes:
+      value: Never paste an API key. Remove keys and customer data from logs before posting.

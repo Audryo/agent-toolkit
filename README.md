@@ -1,4 +1,8 @@
-# Audryo for agents
+# Audryo agent toolkit
+
+[![npm](https://img.shields.io/npm/v/audryo)](https://www.npmjs.com/package/audryo)
+[![CI](https://github.com/Audryo/agent-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/Audryo/agent-toolkit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 CLI, MCP server and agent skills for [Audryo](https://audryo.com), the
 review-before-send lifecycle email platform. Same workspace API key and
@@ -14,14 +18,14 @@ Create an API key under **Settings → Developer**, then pick your agent.
 
 ```bash
 export AUDRYO_API_KEY="sf_live_..."
-claude plugin marketplace add Audryo/Skills
+claude plugin marketplace add Audryo/agent-toolkit
 claude plugin install audryo@audryo
 ```
 
 ### Any agent: skills only
 
 ```bash
-npx skills add Audryo/Skills
+npx skills add Audryo/agent-toolkit
 ```
 
 ### Any MCP client
@@ -79,13 +83,10 @@ npx audryo delivery health
 | `audryo-email` | Build valid email documents, handle locales, save drafts for review |
 | `audryo-sending` | Choose communication classes, respect consent, protect deliverability |
 
-## Development
+## Contributing
 
-This repository is a mirror of `packages/audryo` in the Audryo monorepo;
-changes made here are overwritten. Report issues here. Release steps: [RELEASING.md](./RELEASING.md).
-
-```bash
-npm test
-```
+Issues and pull requests are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md)
+and the [changelog](./CHANGELOG.md). Report security issues privately:
+[SECURITY.md](./SECURITY.md).
 
 License: MIT

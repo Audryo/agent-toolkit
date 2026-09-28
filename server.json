@@ -5,18 +5,42 @@
   "description": "Lifecycle email for agents: journeys, campaigns, contacts, consent and delivery health.",
   "version": "0.1.1",
   "websiteUrl": "https://audryo.com",
-  "repository": { "url": "https://github.com/Audryo/Skills", "source": "github" },
+  "repository": {
+    "url": "https://github.com/Audryo/agent-toolkit",
+    "source": "github"
+  },
   "packages": [
     {
       "registryType": "npm",
       "identifier": "audryo",
       "version": "0.1.1",
-      "transport": { "type": "stdio" },
-      "packageArguments": [{ "type": "positional", "value": "mcp" }],
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
       "environmentVariables": [
-        { "name": "AUDRYO_API_KEY", "description": "Workspace API key from Settings → Developer", "isRequired": true, "isSecret": true },
-        { "name": "AUDRYO_PROJECT_ID", "description": "Project to operate on; list them with `npx audryo bootstrap`", "isRequired": false },
-        { "name": "AUDRYO_API_BASE", "description": "API base URL", "isRequired": false, "default": "https://api.audryo.com/v1" }
+        {
+          "name": "AUDRYO_API_KEY",
+          "description": "Workspace API key from Settings → Developer",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "AUDRYO_PROJECT_ID",
+          "description": "Project to operate on; list them with `npx audryo bootstrap`",
+          "isRequired": false
+        },
+        {
+          "name": "AUDRYO_API_BASE",
+          "description": "API base URL",
+          "isRequired": false,
+          "default": "https://api.audryo.com/v1"
+        }
       ]
     }
   ]

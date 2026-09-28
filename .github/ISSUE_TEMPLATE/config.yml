@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://app.audryo.com/docs/agents/packaging
+    about: Setup for Claude Code, Codex, Cursor and the CLI.
+  - name: Account or billing help
+    url: mailto:support@audryo.com
+    about: Questions about your Audryo workspace go to support.
+  - name: Security issue
+    url: https://github.com/Audryo/agent-toolkit/security/advisories/new
+    about: Report vulnerabilities privately, never in a public issue.
