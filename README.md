@@ -4,15 +4,44 @@
 [![CI](https://github.com/Audryo/agent-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/Audryo/agent-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
-CLI, MCP server and agent skills for [Audryo](https://audryo.com), the
-review-before-send lifecycle email platform. Same workspace API key and
-`read` / `write` / `deliver` scopes as the product.
+Let your AI agent run your lifecycle email: audiences, journeys, campaigns,
+emails and transactional sends in [Audryo](https://audryo.com), through the
+same API the app uses. Your agent does the setup work; nothing reaches a
+customer until a person approves it.
 
-Full guide: <https://app.audryo.com/docs/agents/packaging>
+This repo ships the `audryo` CLI, an MCP server and agent skills for
+Claude Code, Codex, Cursor and any other MCP client.
+
+```text
+You:   Set up an onboarding journey for signups who haven't created a
+       project after 3 days.
+
+Agent: Reads your data schema, builds the audience, drafts a three-email
+       journey, dry-runs it and fast-forwards it in the sandbox. Then it
+       hands back what to review. Nothing has been sent.
+```
+
+## Safety model
+
+- **Drafts by default.** Journeys, emails and campaigns an agent creates are
+  review-only proposals.
+- **Sending needs `deliver`.** Without that scope a key cannot activate a
+  journey or send anything, even by mistake. With it, Audryo still requires
+  a passing dry run and confirmed emails.
+- **Sandbox first.** New projects capture every email in a sandbox inbox, so
+  agents can test real journeys end to end. Going live is a human decision
+  in the app.
+- **Retry-safe.** Sends and proposals take an `Idempotency-Key`, so a retried
+  call never sends twice.
+- **No inferred consent.** Ingesting contacts never grants marketing consent.
 
 ## Quick start
 
-Create an API key under **Settings → Developer**, then pick your agent.
+1. [Sign up](https://app.audryo.com) (free during the public beta) and create
+   a project. It starts in the sandbox.
+2. Create an API key under **Settings → Developer** with the smallest scope
+   that works (see [Configuration](#configuration)).
+3. Connect your agent:
 
 ### Claude Code (plugin: MCP server + skills)
 
@@ -63,6 +92,21 @@ Give agents the smallest key that works:
 | Sync data, draft journeys, emails and campaigns | `read`, `write` |
 | Activate journeys, send campaigns and transactional email | `read`, `write`, `deliver` |
 
+## MCP tools
+
+| Area | Tools | Scope |
+| --- | --- | --- |
+| Orient | `get_manifest`, `get_bootstrap`, `get_setup_context`, `get_brief`, `get_plan_usage` | read |
+| Product and data | `get_product_context`, `get_data_context`, `list_contacts`, `ingest_contacts`, `ingest_events` | read / write |
+| Journeys | `list_journeys`, `inspect_journey`, `create_journey_proposal`, `revise_journey`, `propose_from_finding`, `run_dry_run` | read / write |
+| Emails | `create_email`, `create_journey_email` | write |
+| Campaigns | `list_campaigns`, `draft_campaign` | read / write |
+| Sandbox | `get_delivery_mode`, `list_sandbox_messages`, `get_sandbox_message`, `fast_forward_journey` | read / write |
+| Insights | `get_delivery_health`, `get_performance`, `get_observation`, `run_observation`, `get_copilot_plan` | read |
+| Go live | `activate_journey`, `pause_journey`, `send_campaign`, `send_transactional` | deliver |
+
+Every tool is also a CLI command.
+
 ## CLI
 
 ```bash
@@ -82,6 +126,8 @@ npx audryo delivery health
 | `audryo-api` | Connect, pick scopes, use MCP or CLI instead of curl, stop at review |
 | `audryo-email` | Build valid email documents, handle locales, save drafts for review |
 | `audryo-sending` | Choose communication classes, respect consent, protect deliverability |
+
+Full guide: <https://app.audryo.com/docs/agents/quickstart>
 
 ## Contributing
 
