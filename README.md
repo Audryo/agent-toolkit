@@ -98,6 +98,7 @@ Give agents the smallest key that works:
 | --- | --- | --- |
 | Orient | `get_manifest`, `get_bootstrap`, `get_setup_context`, `get_brief`, `get_plan_usage` | read |
 | Product and data | `get_product_context`, `get_data_context`, `list_contacts`, `ingest_contacts`, `ingest_events` | read / write |
+| Audiences | `list_audiences`, `get_audience`, `preview_audience`, `create_audience`, `update_audience`, `delete_audience`, `suggest_audiences` | read / write |
 | Journeys | `list_journeys`, `inspect_journey`, `create_journey_proposal`, `revise_journey`, `propose_from_finding`, `run_dry_run` | read / write |
 | Emails | `create_email`, `create_journey_email` | write |
 | Campaigns | `list_campaigns`, `draft_campaign` | read / write |
@@ -115,6 +116,7 @@ npx audryo contacts ingest contacts.json
 npx audryo events ingest events.json
 npx audryo journeys list
 npx audryo journeys inspect <workflowId>
+npx audryo audiences create --name "All contacts" --definition '{"operator":"and","conditions":[]}'
 npx audryo campaigns draft --name "July update" --audience-id <id> --subject "What's new"
 npx audryo delivery health
 ```

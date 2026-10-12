@@ -7,6 +7,23 @@ const projectIdProperty = {
   },
 };
 
+const audienceIdProperty = { type: "string", description: "Audience UUID." };
+
+const audienceDefinitionProperty = {
+  type: "object",
+  additionalProperties: true,
+  description:
+    'Rule tree: {"operator":"and"|"or","conditions":[...]}; an empty conditions list matches every contact. ' +
+    'Rules: {"type":"attribute","field":"premium","operator":"equals","value":true} ' +
+    "(exists, not_exists, equals, not_equals, contains, greater_than, less_than, greater_than_or_equal, less_than_or_equal, " +
+    'before_relative/after_relative with value {"amount":30,"unit":"days|weeks|months"}, date_between with value {"from","to"}); ' +
+    '{"type":"event","name":"signed_up","operator":"performed"|"not_performed"}; ' +
+    '{"type":"tag","operator":"has"|"not_has","value":"vip"}; ' +
+    '{"type":"mailing_list","mailingListId":"<uuid>","operator":"subscribed"|"not_subscribed"}; ' +
+    'nested {"type":"group","operator":"and"|"or","conditions":[...]}. At most 25 rules and 3 group levels. ' +
+    "Use confirmed field and event keys from get_data_context.",
+};
+
 export const tools = [
   {
     name: "get_manifest",
@@ -92,6 +109,143 @@ export const tools = [
         search: args.search,
         "filter[status]": args.status,
       }),
+  },
+  {
+    name: "list_audiences",
+    description: "List saved audiences with their rule definition and estimated size.",
+    scope: "read",
+    cli: ["audiences", "list"],
+    inputSchema: { type: "object", properties: projectIdProperty, additionalProperties: false },
+    run: (client, args, config) => client.listAudiences(requireProjectId(config, args.projectId)),
+  },
+  {
+    name: "get_audience",
+    description: "Read one audience. With includeReach, also count how many members may be emailed (marketable, pending, suppressed, unknown).",
+    scope: "read",
+    cli: ["audiences", "show"],
+    inputSchema: {
+      type: "object",
+      required: ["audienceId"],
+      properties: {
+        ...projectIdProperty,
+        audienceId: audienceIdProperty,
+        includeReach: { type: "boolean", description: "Also return consent-aware reach." },
+        communicationClass: {
+          type: "string",
+          description: "Reach for this class: marketing | newsletter | product_service | operational | transactional.",
+        },
+      },
+      additionalProperties: false,
+    },
+    run: async (client, args, config) => {
+      const projectId = requireProjectId(config, args.projectId);
+      const audience = await client.getAudience(projectId, args.audienceId);
+      if (!args.includeReach && !args.communicationClass) return audience;
+      const reach = await client.getAudienceReach(projectId, args.audienceId, args.communicationClass);
+      return { ...audience, reach };
+    },
+  },
+  {
+    name: "preview_audience",
+    description: "Dry-run an audience definition: estimated size and up to 10 sample contacts. Saves nothing; run it before create_audience or update_audience. Scope: write.",
+    scope: "write",
+    cli: ["audiences", "preview"],
+    inputSchema: {
+      type: "object",
+      required: ["definition"],
+      properties: {
+        ...projectIdProperty,
+        name: { type: "string", description: "Optional; only used for validation messages." },
+        definition: audienceDefinitionProperty,
+      },
+      additionalProperties: false,
+    },
+    run: (client, args, config) =>
+      client.previewAudience(requireProjectId(config, args.projectId), {
+        name: args.name ?? "Preview",
+        definition: args.definition,
+      }),
+  },
+  {
+    name: "create_audience",
+    description: "Save a live audience (rule tree, not a static list) for journeys and campaigns. Names are unique per project; the project needs at least one contact. Does not enroll or send. Scope: write.",
+    scope: "write",
+    cli: ["audiences", "create"],
+    inputSchema: {
+      type: "object",
+      required: ["name", "definition"],
+      properties: {
+        ...projectIdProperty,
+        name: { type: "string", minLength: 2, maxLength: 255 },
+        definition: audienceDefinitionProperty,
+      },
+      additionalProperties: false,
+    },
+    run: (client, args, config) =>
+      client.createAudience(requireProjectId(config, args.projectId), {
+        name: args.name,
+        definition: args.definition,
+      }),
+  },
+  {
+    name: "update_audience",
+    description: "Rename an audience or replace its definition. Live journeys and campaigns using it see the new membership immediately, so preview first. Scope: write.",
+    scope: "write",
+    cli: ["audiences", "update"],
+    inputSchema: {
+      type: "object",
+      required: ["audienceId"],
+      properties: {
+        ...projectIdProperty,
+        audienceId: audienceIdProperty,
+        name: { type: "string", minLength: 2, maxLength: 255 },
+        definition: audienceDefinitionProperty,
+      },
+      additionalProperties: false,
+    },
+    run: (client, args, config) => {
+      const audience = {};
+      if (args.name) audience.name = args.name;
+      if (args.definition) audience.definition = args.definition;
+      if (!Object.keys(audience).length) throw new Error("update_audience needs a name or a definition.");
+      return client.updateAudience(requireProjectId(config, args.projectId), args.audienceId, audience);
+    },
+  },
+  {
+    name: "delete_audience",
+    description: "Delete an audience. Refused while journeys or campaigns still use it. Scope: write.",
+    scope: "write",
+    cli: ["audiences", "delete"],
+    inputSchema: {
+      type: "object",
+      required: ["audienceId"],
+      properties: { ...projectIdProperty, audienceId: audienceIdProperty },
+      additionalProperties: false,
+    },
+    run: async (client, args, config) => {
+      await client.deleteAudience(requireProjectId(config, args.projectId), args.audienceId);
+      return { deleted: true, audienceId: args.audienceId };
+    },
+  },
+  {
+    name: "suggest_audiences",
+    description: "Propose starter audiences from the confirmed data schema and Foundation, each with rationale, definition and size. Saves nothing; create_audience applies one. Uses Audryo AI credits. Scope: write.",
+    scope: "write",
+    cli: ["audiences", "suggest"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        ...projectIdProperty,
+        excludeNames: {
+          type: "array",
+          items: { type: "string" },
+          description: "Names already suggested or saved, to get different proposals.",
+        },
+      },
+      additionalProperties: false,
+    },
+    run: (client, args, config) =>
+      client.suggestAudiences(requireProjectId(config, args.projectId), args.excludeNames),
   },
   {
     name: "list_campaigns",

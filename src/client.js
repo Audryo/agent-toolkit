@@ -131,6 +131,44 @@ export const createClient = ({
         path: `/projects/${projectId}/event_ingestion`,
         body: { events },
       }),
+    listAudiences: (projectId) =>
+      request({ path: `/projects/${projectId}/audiences` }),
+    getAudience: (projectId, audienceId) =>
+      request({ path: `/projects/${projectId}/audiences/${audienceId}` }),
+    getAudienceReach: (projectId, audienceId, communicationClass) =>
+      request({
+        path: `/projects/${projectId}/audiences/${audienceId}/reach`,
+        query: { communicationClass },
+      }),
+    previewAudience: (projectId, audience) =>
+      request({
+        method: "POST",
+        path: `/projects/${projectId}/audiences/preview`,
+        body: { audience },
+      }),
+    createAudience: (projectId, audience) =>
+      request({
+        method: "POST",
+        path: `/projects/${projectId}/audiences`,
+        body: { audience },
+      }),
+    updateAudience: (projectId, audienceId, audience) =>
+      request({
+        method: "PATCH",
+        path: `/projects/${projectId}/audiences/${audienceId}`,
+        body: { audience },
+      }),
+    deleteAudience: (projectId, audienceId) =>
+      request({
+        method: "DELETE",
+        path: `/projects/${projectId}/audiences/${audienceId}`,
+      }),
+    suggestAudiences: (projectId, excludeNames) =>
+      request({
+        method: "POST",
+        path: `/projects/${projectId}/audience_suggestions`,
+        body: excludeNames?.length ? { excludeNames } : {},
+      }),
     listCampaigns: (projectId) =>
       request({ path: `/projects/${projectId}/campaigns` }),
     draftCampaign: (projectId, campaign) =>

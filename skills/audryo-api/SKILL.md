@@ -53,6 +53,9 @@ Use these tools instead of curl:
 - `get_copilot_plan` — evidence-first plan for one opportunity
 - `run_dry_run` — validate a journey without activating
 - `list_journeys` — journeys, audiences, opportunities
+- `list_audiences` / `get_audience` — saved audiences; `includeReach` adds consent-aware reach
+- `preview_audience` → `create_audience` / `update_audience` — live rule trees (`{"operator":"and","conditions":[]}` = every contact). Preview first; an update changes live journeys immediately
+- `delete_audience` — refused while a journey or campaign uses it; `suggest_audiences` proposes segments from the confirmed schema
 - `draft_campaign` — reviewable campaign, does not send
 - `get_delivery_health` — provider, identity, governance, recent counts
 - `ingest_events` / `ingest_contacts` — same side effects as the HTTP ingest endpoints
@@ -69,6 +72,8 @@ node packages/audryo/bin/audryo.js journeys list
 node packages/audryo/bin/audryo.js journeys dry-run <workflowId>
 node packages/audryo/bin/audryo.js events ingest events.json
 node packages/audryo/bin/audryo.js contacts ingest contacts.json
+node packages/audryo/bin/audryo.js audiences preview --definition audience.json
+node packages/audryo/bin/audryo.js audiences create --name "Premium families" --definition audience.json
 node packages/audryo/bin/audryo.js campaigns draft --name "July update" --audience-id <id> --subject "What's new"
 node packages/audryo/bin/audryo.js delivery health
 ```

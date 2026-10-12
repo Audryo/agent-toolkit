@@ -28,6 +28,15 @@ Contacts and events
   audryo contacts ingest <file.json>
   audryo events ingest <file.json>
 
+Audiences
+  audryo audiences list
+  audryo audiences show <audienceId> [--include-reach] [--communication-class marketing]
+  audryo audiences preview --definition FILE.json|JSON
+  audryo audiences create --name NAME --definition FILE.json|JSON
+  audryo audiences update <audienceId> [--name NAME] [--definition FILE.json|JSON]
+  audryo audiences delete <audienceId>
+  audryo audiences suggest [--exclude-names "A,B"]
+
 Journeys
   audryo journeys list
   audryo journeys inspect <workflowId>
@@ -174,6 +183,31 @@ const buildToolArgs = async (tool, positional, flags) => {
       throw new ConfigError("journeys revise requires --name, --audience-id and --specification.");
     }
     args.specification = await readJsonValue(flags.specification, "specification");
+  }
+
+  if (["get_audience", "update_audience", "delete_audience"].includes(tool.name)) {
+    args.audienceId = rest[0] ?? flags.audienceId;
+    if (!args.audienceId) throw new ConfigError(`${tool.cli.join(" ")} requires an audience id.`);
+  }
+
+  if (tool.name === "get_audience") {
+    args.includeReach = flags.includeReach === true || flags.includeReach === "true";
+  }
+
+  if (["preview_audience", "create_audience", "update_audience"].includes(tool.name) && flags.definition) {
+    args.definition = await readJsonValue(flags.definition, "definition");
+  }
+
+  if ((tool.name === "preview_audience" || tool.name === "create_audience") && !args.definition) {
+    throw new ConfigError(`${tool.cli.join(" ")} requires --definition (JSON or file path).`);
+  }
+
+  if (tool.name === "create_audience" && !args.name) {
+    throw new ConfigError("audiences create requires --name.");
+  }
+
+  if (tool.name === "suggest_audiences" && typeof flags.excludeNames === "string") {
+    args.excludeNames = flags.excludeNames.split(",").map((name) => name.trim()).filter(Boolean);
   }
 
   if (tool.name === "get_sandbox_message") {
