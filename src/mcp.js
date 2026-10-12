@@ -135,6 +135,8 @@ const formatToolError = (error) => {
         message: error.message,
         status: error.status,
         requestId: error.requestId,
+        // Per-field validation messages, so the agent can correct its input.
+        ...(error.body?.error?.details ? { details: error.body.error.details } : {}),
       },
     });
   }

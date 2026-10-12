@@ -297,6 +297,7 @@ const writeError = (stderr, error) => {
         message: error.message,
         status: error.status,
         requestId: error.requestId,
+        ...(error.body?.error?.details ? { details: error.body.error.details } : {}),
       },
     }, null, 2)}\n`);
     return;
