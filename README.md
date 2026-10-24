@@ -3,6 +3,7 @@
 [![npm](https://img.shields.io/npm/v/audryo)](https://www.npmjs.com/package/audryo)
 [![CI](https://github.com/Audryo/agent-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/Audryo/agent-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/audryo/agent-toolkit)
 
 Let your AI agent run your lifecycle email: audiences, journeys, campaigns,
 emails and transactional sends in [Audryo](https://audryo.com), through the
