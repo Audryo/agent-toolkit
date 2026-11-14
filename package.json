@@ -1,6 +1,6 @@
 {
   "name": "audryo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI, MCP server and agent skills for the Audryo lifecycle email API.",
   "type": "module",
   "bin": {

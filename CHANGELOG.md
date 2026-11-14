@@ -1,5 +1,13 @@
 # audryo
 
+## 0.2.1
+
+### Patch Changes
+
+- Describe what going live does in `get_delivery_mode`: it pauses every active journey, returns scheduled campaigns to draft and deletes all sandbox enrollments and test data, so agents no longer guess.
+
+- [`5f95a57`](https://github.com/Audryo/agent-toolkit/commit/5f95a57c9d35e092de18e56d88ed5cab59906a57) Thanks [@zer0flag](https://github.com/zer0flag)! - Show the API's per-field validation details in MCP tool errors and CLI error output.
+
 ## 0.2.0
 
 ### Minor Changes
