@@ -613,7 +613,7 @@ export const tools = [
   {
     name: "get_delivery_mode",
     description:
-      "Read whether the project is in sandbox mode (emails are captured in the Sandbox inbox, nothing reaches people) or live, plus the go-live checklist. Going live is a human decision in the app. Scope: read.",
+      "Read whether the project is in sandbox mode (emails are captured in the Sandbox inbox, nothing reaches people) or live, plus the go-live checklist and impact counts. Going live is a human decision in the app, and the switch always does all of this, without asking: it pauses every active journey (none sends until each one is resumed), moves scheduled campaigns back to draft, and permanently deletes all sandbox enrollments (including ones waiting on consent or a delay), captured emails and their engagement and conversions. Campaigns sent only in sandbox return to draft. Contacts, audiences, journeys and emails are kept. Because test enrollments are deleted, reentry rules treat contacts as new, so anyone who still qualifies can enter again once a journey is resumed. impact counts what the switch would pause and delete. Scope: read.",
     scope: "read",
     cli: ["sandbox", "status"],
     inputSchema: { type: "object", properties: projectIdProperty, additionalProperties: false },
